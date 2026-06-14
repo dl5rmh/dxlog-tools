@@ -201,6 +201,10 @@
       <div class="field">
         <label for="year">Year</label>
         <input type="text" id="year" inputmode="numeric" maxlength="4">
+        <label style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+          <input type="checkbox" id="addWeek" style="width: auto;">
+          Add calendar week
+        </label>
       </div>
     </div>
   </div>
@@ -231,9 +235,18 @@ const els = {
   contestList: document.getElementById('contestList'),
   mode: document.getElementById('mode'),
   year: document.getElementById('year'),
+  addWeek: document.getElementById('addWeek'),
   callsign: document.getElementById('callsign'),
   fileOutput: document.getElementById('fileOutput'),
 };
+
+function getISOWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
 
 const contestsByLabel = {};
 
@@ -263,10 +276,16 @@ function loadContests() {
 
 function update() {
   const mode = els.mode.value;
-  const year = (els.year.value || '').trim();
+  let year = (els.year.value || '').trim();
+
+  if (els.addWeek.checked) {
+    const week = String(getISOWeek(new Date())).padStart(2, '0');
+    year = `${year}-CW${week}`;
+  }
 
   const contestInput = els.contest.value || '';
   let cabrillo = contestsByLabel[contestInput] ?? contestInput;
+  const hasModePlaceholder = cabrillo.includes('{MODE}');
   cabrillo = cabrillo.replace('{MODE}', mode);
   if (!mode) {
     cabrillo = cabrillo.replace(/-$/, '');
@@ -274,8 +293,8 @@ function update() {
 
   const callsign = (els.callsign.value || '').toUpperCase().replace(/\//g, '_');
 
-  const modePart = mode ? `-${mode}` : '';
-  const fileName = `${cabrillo}${modePart}_${year}@${callsign}`;
+  const modePart = (mode && !hasModePlaceholder) ? `-${mode}` : '';
+  const fileName = cabrillo ? `${cabrillo}${modePart}_${year}@${callsign}` : '';
 
   els.fileOutput.textContent = fileName;
 }
