@@ -1,6 +1,6 @@
 namespace DXLog.net
 {
-    public class AddPortable-KeyThree : ScriptClass
+    public class AddPortableKeyThree : ScriptClass
     {
         public void Initialize(FrmMain main) { }
         public void Deinitialize() { }
