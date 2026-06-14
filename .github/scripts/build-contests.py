@@ -11,7 +11,7 @@ import urllib.request
 from html.parser import HTMLParser
 
 URL = "https://dxlog.net/sw/contestlist.php"
-OUTPUT = os.path.join("docs", "data", "contests.json")
+OUTPUT = os.path.join("Filename-Generator", "data", "contests.json")
 
 
 class ContestTableParser(HTMLParser):
