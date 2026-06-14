@@ -268,10 +268,14 @@ function update() {
   const contestInput = els.contest.value || '';
   let cabrillo = contestsByLabel[contestInput] ?? contestInput;
   cabrillo = cabrillo.replace('{MODE}', mode);
+  if (!mode) {
+    cabrillo = cabrillo.replace(/-$/, '');
+  }
 
   const callsign = (els.callsign.value || '').toUpperCase().replace(/\//g, '_');
 
-  const fileName = `${cabrillo}-${mode}_${year}@${callsign}`;
+  const modePart = mode ? `-${mode}` : '';
+  const fileName = `${cabrillo}${modePart}_${year}@${callsign}`;
 
   els.fileOutput.textContent = fileName;
 }
