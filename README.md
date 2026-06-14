@@ -1,6 +1,6 @@
 # DXLog.net Tools
 
-[![Check C# Scripts](https://github.com/<owner>/<repo>/actions/workflows/check.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/check.yml)
+[![Check C# Scripts](https://github.com/dl5rmh/dxlog-tools/actions/workflows/check.yml/badge.svg)](https://github.com/dl5rmh/dxlog-tools/actions/workflows/check.yml)
 
 A collection of scripts, configurations, best practices, and documentation for [DXLog.net](https://dxlog.net/), the contest logging software.
 
@@ -10,8 +10,6 @@ This repository gathers various customizations and resources for DXLog.net, incl
 
 - C# scripts in folders by use case
 - Documented keyboard shortcuts and macros with clear explanations
-- Bandmap and spot integration settings
-- Best practices for contest operating (SO2V, SO2R, etc.)
 
 ## Usage
 
