@@ -172,7 +172,7 @@
   <p class="lead">
     Generates a contest log file name using the contest and Cabrillo names
     from the
-    <a href="https://dxlog.net/sw/contestlist.php" style="color: var(--accent);">DXLog.net contest list</a>.
+    <a href="https://dxlog.net/sw/contestlist.php" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">DXLog.net contest list</a>.
   </p>
 
   <div class="panel">
@@ -182,12 +182,14 @@
     </div>
     <div class="field">
       <label for="contest">Contest (Cabrillo name)</label>
-      <select id="contest"></select>
+      <input id="contest" list="contestList" autocomplete="off" placeholder="Type to filter...">
+      <datalist id="contestList"></datalist>
     </div>
     <div class="grid">
       <div class="field">
         <label for="mode">Mode</label>
         <select id="mode">
+          <option value="">None</option>
           <option>CW</option>
           <option>SSB</option>
           <option>RTTY</option>
@@ -215,8 +217,10 @@
 
   <footer>
     Contest list generated from
-    <a href="https://dxlog.net/sw/contestlist.php">dxlog.net/sw/contestlist.php</a>
+    <a href="https://dxlog.net/sw/contestlist.php" target="_blank" rel="noopener noreferrer">dxlog.net/sw/contestlist.php</a>
     on each deployment.
+    <br>
+    Built between QSOs by <a href="https://www.qrz.com/db/DL5RMH" target="_blank" rel="noopener noreferrer">DL5RMH</a>
   </footer>
 
 </div>
@@ -224,11 +228,14 @@
 <script>
 const els = {
   contest: document.getElementById('contest'),
+  contestList: document.getElementById('contestList'),
   mode: document.getElementById('mode'),
   year: document.getElementById('year'),
   callsign: document.getElementById('callsign'),
   fileOutput: document.getElementById('fileOutput'),
 };
+
+const contestsByLabel = {};
 
 els.year.value = String(new Date().getFullYear());
 
@@ -237,19 +244,20 @@ function loadContests() {
     .then(r => r.json())
     .then(contests => {
       for (const c of contests) {
-        const opt = document.createElement('option');
-        opt.value = c.cabrillo;
         const displayCabrillo = c.cabrillo.replace('-{MODE}', '').replace('{MODE}', '');
-        opt.textContent = `${displayCabrillo} - ${c.name}`;
-        els.contest.appendChild(opt);
+        const label = `${displayCabrillo} - ${c.name}`;
+        contestsByLabel[label] = c.cabrillo;
+
+        const opt = document.createElement('option');
+        opt.value = label;
+        els.contestList.appendChild(opt);
       }
       update();
     })
     .catch(() => {
       const opt = document.createElement('option');
-      opt.value = '';
-      opt.textContent = 'Could not load contest list';
-      els.contest.appendChild(opt);
+      opt.value = 'Could not load contest list';
+      els.contestList.appendChild(opt);
     });
 }
 
@@ -257,7 +265,8 @@ function update() {
   const mode = els.mode.value;
   const year = (els.year.value || '').trim();
 
-  let cabrillo = els.contest.value || '';
+  const contestInput = els.contest.value || '';
+  let cabrillo = contestsByLabel[contestInput] ?? contestInput;
   cabrillo = cabrillo.replace('{MODE}', mode);
 
   const callsign = (els.callsign.value || '').toUpperCase().replace(/\//g, '_');
