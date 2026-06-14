@@ -1,5 +1,3 @@
-using System;
-
 namespace DXLog.net
 {
     public class SetCWSpeed : ScriptClass
