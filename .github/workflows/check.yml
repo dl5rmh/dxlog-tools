@@ -1,4 +1,4 @@
-name: Check DXLog.net C# Scripts
+name: Check C# Scripts
 
 on:
   push:
@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0'
+          dotnet-version: '8.0.x'
+
       - name: Run syntax & rule checks
-        run: dotnet run --project tools/CheckScripts
+        run: dotnet run --project .github/scripts/CheckScripts
