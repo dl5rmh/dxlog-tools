@@ -154,6 +154,10 @@
     font-size: 13px;
   }
 
+  .hint code {
+    color: var(--accent);
+  }
+
   footer {
     color: var(--muted);
     font-size: 12px;
@@ -217,6 +221,12 @@
   <div class="panel hint">
     Typical usage: create a folder using the generated name yourself. For a
     new file in DXLog, enter the name without a file extension.
+    <br><br>
+    Tip: bookmark this page with URL parameters to pre-fill fields, e.g.
+    <code>?callsign=DL5RMH&amp;mode=CW&amp;year=2026&amp;week=1&amp;cabrillo=CQ-WW-CW</code>.
+    Supported parameters: <code>callsign</code>, <code>mode</code>,
+    <code>year</code>, <code>week</code>,
+    <code>cabrillo</code> (Cabrillo name, including <code>{MODE}</code> if applicable).
   </div>
 
   <footer>
@@ -265,12 +275,15 @@ function loadContests() {
         opt.value = label;
         els.contestList.appendChild(opt);
       }
-      update();
     })
     .catch(() => {
       const opt = document.createElement('option');
       opt.value = 'Could not load contest list';
       els.contestList.appendChild(opt);
+    })
+    .finally(() => {
+      applyQueryParams();
+      update();
     });
 }
 
@@ -297,6 +310,28 @@ function update() {
   const fileName = cabrillo ? `${cabrillo}${modePart}_${year}@${callsign}` : '';
 
   els.fileOutput.textContent = fileName;
+}
+
+function applyQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.has('callsign')) {
+    els.callsign.value = params.get('callsign');
+  }
+  if (params.has('mode')) {
+    els.mode.value = params.get('mode');
+  }
+  if (params.has('year')) {
+    els.year.value = params.get('year');
+  }
+  if (params.has('week')) {
+    els.addWeek.checked = params.get('week') === '1' || params.get('week') === 'true';
+  }
+  if (params.has('cabrillo')) {
+    const cabrillo = params.get('cabrillo');
+    const label = Object.keys(contestsByLabel).find(l => contestsByLabel[l] === cabrillo);
+    els.contest.value = label || cabrillo;
+  }
 }
 
 document.querySelectorAll('input, select').forEach(el => {
