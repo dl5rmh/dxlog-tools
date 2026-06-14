@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/css/tom-select.min.css" rel="stylesheet">
 <style>
   :root {
     --bg: #0E2A2E;
@@ -158,6 +159,53 @@
     color: var(--accent);
   }
 
+  .ts-wrapper {
+    width: 100%;
+  }
+
+  .ts-wrapper.single .ts-control,
+  .ts-wrapper.single .ts-control input {
+    background: var(--panel-2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    color: var(--text) !important;
+    font-family: 'IBM Plex Mono', monospace !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+  }
+
+  .ts-wrapper.single .ts-control {
+    padding: 0.5rem 0.6rem !important;
+  }
+
+  .ts-wrapper.focus .ts-control {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .ts-dropdown {
+    background: var(--panel-2) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    font-family: 'IBM Plex Mono', monospace !important;
+    font-size: 14px !important;
+  }
+
+  .ts-dropdown .ts-dropdown-content .option {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .ts-dropdown .option.active,
+  .ts-dropdown .option:hover {
+    background: var(--accent) !important;
+    color: var(--panel) !important;
+  }
+
+  .ts-dropdown .no-results {
+    color: var(--muted) !important;
+    padding: 0.4rem 0.6rem;
+  }
+
   footer {
     color: var(--muted);
     font-size: 12px;
@@ -186,8 +234,7 @@
     </div>
     <div class="field">
       <label for="contest">Contest (Cabrillo name)</label>
-      <input id="contest" list="contestList" autocomplete="off" placeholder="Type to filter...">
-      <datalist id="contestList"></datalist>
+      <select id="contest"></select>
     </div>
     <div class="grid">
       <div class="field">
@@ -239,16 +286,18 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/js/tom-select.complete.min.js"></script>
 <script>
 const els = {
   contest: document.getElementById('contest'),
-  contestList: document.getElementById('contestList'),
   mode: document.getElementById('mode'),
   year: document.getElementById('year'),
   addWeek: document.getElementById('addWeek'),
   callsign: document.getElementById('callsign'),
   fileOutput: document.getElementById('fileOutput'),
 };
+
+let contestSelect;
 
 function getISOWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -258,30 +307,36 @@ function getISOWeek(date) {
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
-const contestsByLabel = {};
-
 els.year.value = String(new Date().getFullYear());
 
 function loadContests() {
   fetch('./data/contests.json')
     .then(r => r.json())
     .then(contests => {
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      els.contest.appendChild(placeholder);
+
       for (const c of contests) {
         const displayCabrillo = c.cabrillo.replace('-{MODE}', '').replace('{MODE}', '');
-        const label = `${displayCabrillo} - ${c.name}`;
-        contestsByLabel[label] = c.cabrillo;
-
         const opt = document.createElement('option');
-        opt.value = label;
-        els.contestList.appendChild(opt);
+        opt.value = c.cabrillo;
+        opt.textContent = `${displayCabrillo} - ${c.name}`;
+        els.contest.appendChild(opt);
       }
     })
     .catch(() => {
       const opt = document.createElement('option');
-      opt.value = 'Could not load contest list';
-      els.contestList.appendChild(opt);
+      opt.value = '';
+      opt.textContent = 'Could not load contest list';
+      els.contest.appendChild(opt);
     })
     .finally(() => {
+      contestSelect = new TomSelect('#contest', {
+        placeholder: 'Type to filter...',
+        allowEmptyOption: true,
+        onChange: update,
+      });
       applyQueryParams();
       update();
     });
@@ -296,8 +351,7 @@ function update() {
     year = `${year}-CW${week}`;
   }
 
-  const contestInput = els.contest.value || '';
-  let cabrillo = contestsByLabel[contestInput] ?? contestInput;
+  let cabrillo = els.contest.value || '';
   const hasModePlaceholder = cabrillo.includes('{MODE}');
   cabrillo = cabrillo.replace('{MODE}', mode);
   if (!mode) {
@@ -328,9 +382,7 @@ function applyQueryParams() {
     els.addWeek.checked = params.get('week') === '1' || params.get('week') === 'true';
   }
   if (params.has('cabrillo')) {
-    const cabrillo = params.get('cabrillo');
-    const label = Object.keys(contestsByLabel).find(l => contestsByLabel[l] === cabrillo);
-    els.contest.value = label || cabrillo;
+    contestSelect.setValue(params.get('cabrillo'), true);
   }
 }
 
