@@ -1,0 +1,14 @@
+[
+  { "name": "ARRL DX", "cabrillo": "ARRL-DX-{MODE}" },
+  { "name": "ARRL Sweepstakes CW", "cabrillo": "ARRL-SS-{MODE}" },
+  { "name": "CQ World Wide", "cabrillo": "CQ-WW-{MODE}" },
+  { "name": "CQ World Wide RTTY", "cabrillo": "CQ-WW-RTTY" },
+  { "name": "CQ WPX", "cabrillo": "CQ-WPX-{MODE}" },
+  { "name": "CQ WW 160-Meter Contest", "cabrillo": "CQ-160-{MODE}" },
+  { "name": "CWOps - CWT", "cabrillo": "CW-OPS" },
+  { "name": "DARC 10m Contest", "cabrillo": "DARC-10M" },
+  { "name": "EU Sprint", "cabrillo": "EU-SPRINT-{MODE}" },
+  { "name": "Helvetia Contest", "cabrillo": "HELVETIA" },
+  { "name": "IARU HF Championship", "cabrillo": "IARU-HF" },
+  { "name": "NAQP - North American QSO Party", "cabrillo": "NAQP-{MODE}" }
+]

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXLog.net Contest Filename Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E2A2E;
+    --panel: #163A3F;
+    --panel-2: #1D474D;
+    --text: #EAF3F1;
+    --muted: #9AC2BE;
+    --accent: #F2A93B;
+    --border: #2A4F54;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 2rem 1rem 4rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0 0 0.5rem;
+  }
+
+  .lead {
+    color: var(--muted);
+    margin: 0 0 2rem;
+    max-width: 56ch;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0 0 1rem;
+    color: var(--accent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+
+  input, select {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    padding: 0.5rem 0.6rem;
+  }
+
+  input:focus, select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .field {
+    margin-bottom: 1rem;
+  }
+
+  .field:last-child {
+    margin-bottom: 0;
+  }
+
+  .output-big {
+    margin-bottom: 1.5rem;
+  }
+
+  .output-big .value {
+    font-size: 20px;
+  }
+
+  button {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .output {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .output .value {
+    flex: 1;
+    color: var(--accent);
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  .output .label {
+    color: var(--muted);
+    font-size: 12px;
+    min-width: 80px;
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  footer {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 2rem;
+  }
+
+  footer a {
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>DXLog.net Contest Filename Generator</h1>
+  <p class="lead">
+    Generates a contest log file name using the contest and Cabrillo names
+    from the
+    <a href="https://dxlog.net/sw/contestlist.php" style="color: var(--accent);">DXLog.net contest list</a>.
+  </p>
+
+  <div class="panel">
+    <div class="field">
+      <label for="callsign">Log callsign</label>
+      <input type="text" id="callsign" style="text-transform: uppercase;">
+    </div>
+    <div class="field">
+      <label for="contest">Contest (Cabrillo name)</label>
+      <select id="contest"></select>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option>CW</option>
+          <option>SSB</option>
+          <option>RTTY</option>
+          <option>FT8</option>
+          <option>MIXED</option>
+          <option>DIGI</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="year">Year</label>
+        <input type="text" id="year" inputmode="numeric" maxlength="4">
+      </div>
+    </div>
+  </div>
+
+  <div class="output output-big">
+    <span class="value" id="fileOutput"></span>
+    <button class="copy" data-target="fileOutput" type="button">Copy</button>
+  </div>
+
+  <div class="panel hint">
+    Typical usage: create a folder using the generated name yourself. For a
+    new file in DXLog, enter the name without a file extension.
+  </div>
+
+  <footer>
+    Contest list generated from
+    <a href="https://dxlog.net/sw/contestlist.php">dxlog.net/sw/contestlist.php</a>
+    on each deployment.
+  </footer>
+
+</div>
+
+<script>
+const els = {
+  contest: document.getElementById('contest'),
+  mode: document.getElementById('mode'),
+  year: document.getElementById('year'),
+  callsign: document.getElementById('callsign'),
+  fileOutput: document.getElementById('fileOutput'),
+};
+
+els.year.value = String(new Date().getFullYear());
+
+function loadContests() {
+  fetch('./data/contests.json')
+    .then(r => r.json())
+    .then(contests => {
+      for (const c of contests) {
+        const opt = document.createElement('option');
+        opt.value = c.cabrillo;
+        const displayCabrillo = c.cabrillo.replace('-{MODE}', '').replace('{MODE}', '');
+        opt.textContent = `${displayCabrillo} - ${c.name}`;
+        els.contest.appendChild(opt);
+      }
+      update();
+    })
+    .catch(() => {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'Could not load contest list';
+      els.contest.appendChild(opt);
+    });
+}
+
+function update() {
+  const mode = els.mode.value;
+  const year = (els.year.value || '').trim();
+
+  let cabrillo = els.contest.value || '';
+  cabrillo = cabrillo.replace('{MODE}', mode);
+
+  const callsign = (els.callsign.value || '').toUpperCase().replace(/\//g, '_');
+
+  const fileName = `${cabrillo}-${mode}_${year}@${callsign}`;
+
+  els.fileOutput.textContent = fileName;
+}
+
+document.querySelectorAll('input, select').forEach(el => {
+  el.addEventListener('input', update);
+  el.addEventListener('change', update);
+});
+
+document.querySelectorAll('.copy').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const text = document.getElementById(btn.dataset.target).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = original; }, 1200);
+    });
+  });
+});
+
+loadContests();
+</script>
+</body>
+</html>
