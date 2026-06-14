@@ -1,6 +1,8 @@
 # DXLog.net Tools
 
 [![Check C# Scripts](https://github.com/dl5rmh/dxlog-tools/actions/workflows/check.yml/badge.svg)](https://github.com/dl5rmh/dxlog-tools/actions/workflows/check.yml)
+[![Contest Filename Helper](https://github.com/dl5rmh/dxlog-tools/actions/workflows/pages.yml/badge.svg)](https://github.com/dl5rmh/dxlog-tools/actions/workflows/pages.yml)
+
 
 A collection of scripts, configurations, best practices, and documentation for [DXLog.net](https://dxlog.net/), the contest logging software.
 
@@ -10,6 +12,19 @@ This repository gathers various customizations and resources for DXLog.net, incl
 
 - C# scripts in folders by use case
 - Documented keyboard shortcuts and macros with clear explanations
+
+## DXLog.net Contest Filename Helper
+
+Naming your contest log files consistently makes them easy to find, sort,
+and back up — especially once you've got a few seasons' worth of contests
+on disk. The **Contest filename helper** generates a standardized file name
+for each contest log based on the official DXLog.net contest list, your
+callsign, mode, and year, so every log follows the same schema.
+
+[Open the Contest filename helper](https://dl5rmh.github.io/dxlog-tools/)
+
+Tip: save it as a bookmark for quick access.
+
 
 ## Usage
 
