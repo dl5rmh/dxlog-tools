@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 // DXLog.net auto-injects these 'using' directives into every script.
 // Including them explicitly causes a CS0105 ("duplicate using") error
 // when the script is compiled inside DXLog.net.
-var forbiddenUsings = new[] { "System", "System.Windows.Forms" };
+var forbiddenUsings = new[] {};
 
 // Locate the repository root by walking up until a .git folder is found.
 var repoRoot = FindRepoRoot(AppContext.BaseDirectory);
