@@ -15,7 +15,9 @@ var repoRoot = FindRepoRoot(AppContext.BaseDirectory);
 
 var checkToolDir = Path.Combine(repoRoot, ".github", "scripts", "CheckScripts");
 
-var csFiles = Directory.EnumerateFiles(repoRoot, "*.cs", SearchOption.AllDirectories)
+var scriptsDir = Path.Combine(repoRoot, "Scripts");
+
+var csFiles = Directory.EnumerateFiles(scriptsDir, "*.cs", SearchOption.AllDirectories)
     .Where(f => !f.StartsWith(checkToolDir))
     .Where(f => !f.Split(Path.DirectorySeparatorChar).Contains("bin"))
     .Where(f => !f.Split(Path.DirectorySeparatorChar).Contains("obj"))
