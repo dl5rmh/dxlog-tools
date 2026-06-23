@@ -2,6 +2,8 @@ name: Check C# Scripts
 
 on:
   workflow_dispatch:
+    paths:
+      - 'Scripts/**/*.cs'
   push:
     paths:
       - 'Scripts/**/*.cs'
