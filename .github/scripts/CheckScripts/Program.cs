@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 // DXLog.net auto-injects these 'using' directives into every script.
 // Including them explicitly causes a CS0105 ("duplicate using") error
 // when the script is compiled inside DXLog.net.
-var forbiddenUsings = new[] {};
+//var forbiddenUsings = new[] {};*
 
 // Locate the repository root by walking up until a .git folder is found.
 var repoRoot = FindRepoRoot(AppContext.BaseDirectory);
@@ -49,16 +49,16 @@ foreach (var file in csFiles)
     }
 
     // 2. Forbidden 'using' directives (DXLog.net injects these automatically)
-    foreach (var u in root.Usings)
-    {
-        var name = u.Name?.ToString();
-        if (name != null && forbiddenUsings.Contains(name))
-        {
-            hasErrors = true;
-            var pos = u.GetLocation().GetLineSpan().StartLinePosition;
-            Console.WriteLine($"::error file={relPath},line={pos.Line + 1}::Explicit 'using {name};' is auto-injected by DXLog.net and will cause CS0105. Remove this line.");
-        }
-    }
+    //foreach (var u in root.Usings)
+    //{
+    //    var name = u.Name?.ToString();
+    //    if (name != null && forbiddenUsings.Contains(name))
+    //    {
+    //        hasErrors = true;
+    //        var pos = u.GetLocation().GetLineSpan().StartLinePosition;
+    //        Console.WriteLine($"::error file={relPath},line={pos.Line + 1}::Explicit 'using {name};' is auto-injected by DXLog.net and will cause CS0105. Remove this line.");
+    //    }
+    //}
 
     // 3. Collect class names for duplicate check across the repo
     var classes = root.DescendantNodes()
