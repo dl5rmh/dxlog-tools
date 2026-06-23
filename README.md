@@ -11,6 +11,7 @@ A collection of scripts, configurations, best practices, and documentation for [
 This repository gathers various customizations and resources for DXLog.net, including:
 
 - C# scripts in folders by use case
+- Additional windows using CustomForms
 - Documented keyboard shortcuts and macros with clear explanations
 
 ## DXLog.net Contest Filename Helper
